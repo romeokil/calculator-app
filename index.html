@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator with History</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .calculator-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .calculator {
+      width: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .output {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-align: right;
+    }
+    .history {
+      width:50%;
+      border-left: 1px solid #ccc;
+      padding-left: 10px;
+      margin-left: 10px;
+      height: 700px;
+      overflow-y: auto;
+    }
+    .history-item {
+      margin-bottom: 5px;
+    }
+    .history-item:last-child {
+      margin-bottom: 0;
+    }
+    .history-item button {
+      font-size: 12px;
+      padding: 2px 5px;
+      cursor: pointer;
+      border: none;
+      background: #f44336;
+      color: white;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator-container">
+  <div class="calculator">
+    <div class="output" id="output">0</div>
+    <div>
+      <button onclick="appendToOutput('7')">7</button>
+      <button onclick="appendToOutput('8')">8</button>
+      <button onclick="appendToOutput('9')">9</button>
+      <button onclick="appendToOutput('/')">/</button>
+    </div>
+    <div>
+      <button onclick="appendToOutput('4')">4</button>
+      <button onclick="appendToOutput('5')">5</button>
+      <button onclick="appendToOutput('6')">6</button>
+      <button onclick="appendToOutput('*')">*</button>
+    </div>
+    <div>
+      <button onclick="appendToOutput('1')">1</button>
+      <button onclick="appendToOutput('2')">2</button>
+      <button onclick="appendToOutput('3')">3</button>
+      <button onclick="appendToOutput('-')">-</button>
+    </div>
+    <div>
+      <button onclick="appendToOutput('0')">0</button>
+      <button onclick="appendToOutput('.')">.</button>
+      <button onclick="calculate()">=</button>
+      <button onclick="appendToOutput('+')">+</button>
+    </div>
+    <div>
+      <button onclick="clearoutput()">clear</button>
+      <button onclick="vanish()">AC</button>
+    </div>
+  </div>
+  <div class="history" id="history">
+    <h3>History</h3>
+  </div>
+</div>
+
+<script>
+  var historydetails= [];
+  const resulthistory=document.getElementById('resulthistory');
+  var output=document.getElementById('output');
+
+  function clearoutput(){
+    // var output = document.getElementById('output');
+    // console.log(output.textContent)
+    console.log(output.textContent=output.textContent.slice(0,-1));
+  }
+
+  function vanish(){
+    // var output = document.getElementById('output');
+    output.textContent='';
+  }
+  function appendToOutput(value) {
+    // var output = document.getElementById('output');
+    if (output.textContent === '0' && value !== '.') {
+      output.textContent = value;
+    } else {
+      output.textContent += value;
+    }
+  }
+
+  function calculate() {
+    // var output = document.getElementById('output');
+    try {
+      var result = eval(output.textContent);
+      addToHistory(output.textContent=output.textContent + ' = ' + result);
+      // console.log(output.textContent + ' = ' + result)
+      // console.log("hi",result);
+      // addToHistory(result)
+
+
+      output.textContent = result;
+    } catch (error) {
+        console.log(error)
+      output.textContent = 'Error';
+    }
+  }
+
+  function addToHistory(item) {
+    historydetails.push(item);
+    console.log("history ka length bta rha hai",historydetails.length)
+    if (historydetails.length > 10) {
+      historydetails.shift();
+    }
+    updateHistoryUI();
+  }
+
+  function updateHistoryUI() {
+    var historyElement = document.getElementById('history');
+    historyElement.innerHTML = '<h3>History</h3>';
+    for (var i = 0; i < historydetails.length; i++) {
+      var historyItem = document.createElement('div');
+      historyItem.classList.add('history-item');
+      // console.log("hi re",historydetails[i])
+      historyItem.textContent = historydetails[i];
+      // console.log("history ui ke andr");
+      // console.log("history details bta rha hai",historydetails[i]);
+      var removeButton = document.createElement('button');
+      removeButton.textContent = 'Remove';
+      removeButton.onclick = removeHistoryItem.bind(null, i);
+      historyItem.appendChild(removeButton);
+      historyElement.appendChild(historyItem);
+    }
+  }
+
+  function removeHistoryItem(index) {
+    historydetails.splice(index, 1);
+    updateHistoryUI();
+  }
+</script>
+
+</body>
+</html>
